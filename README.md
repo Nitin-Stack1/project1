@@ -434,6 +434,11 @@ update_instance_status()
 root.mainloop()
 
 
+
+
+
+
+
 # llm integrated text generation
 pip install cohere tkinter
 import tkinter as tk
