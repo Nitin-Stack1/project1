@@ -1,4 +1,4 @@
-# project1
+# project 1
 import tkinter as tk
 from tkinter import messagebox, ttk, filedialog, scrolledtext
 import cv2
@@ -12,8 +12,8 @@ import requests
 from googlesearch import search
 
 # AWS Configurations (Replace with your actual credentials)
-aws_access_key_id = ' '
-aws_secret_access_key = ' '
+aws_access_key_id = ''
+aws_secret_access_key = ''
 region_name = 'ap-south-1'
 
 # Mappls API key (Replace with your actual Mappls API key)
@@ -429,6 +429,73 @@ ec2_frame = ttk.Frame(notebook)
 notebook.add(ec2_frame, text='EC2 Instances')
 
 update_instance_status()
+
+# Run the application
+root.mainloop()
+
+
+# llm integrated text generation
+pip install cohere tkinter
+import tkinter as tk
+from tkinter import scrolledtext, messagebox
+import cohere
+
+# Initialize the Cohere client
+cohere_api_key = ' '
+cohere_client = cohere.Client(api_key=cohere_api_key)
+
+# Set up a simple in-memory cache using a dictionary
+cache = {}
+
+# Define a function to generate text using Cohere
+def generate_text(prompt, max_tokens=50):
+    # Check if the prompt is already cached
+    if prompt in cache:
+        return cache[prompt]
+    
+    # If not cached, generate text using Cohere
+    response = cohere_client.generate(
+        model='command-xlarge-nightly',
+        prompt=prompt,
+        max_tokens=max_tokens
+    )
+    generated_text = response.generations[0].text.strip()
+
+    # Cache the response
+    cache[prompt] = generated_text
+    
+    return generated_text
+
+# Define the function to be called when the "Generate Text" button is clicked
+def on_generate_text():
+    prompt = prompt_entry.get()
+    if not prompt:
+        messagebox.showwarning("Warning", "Please enter a prompt.")
+        return
+    
+    generated_text = generate_text(prompt)
+    result_text.config(state=tk.NORMAL)
+    result_text.delete(1.0, tk.END)
+    result_text.insert(tk.END, generated_text)
+    result_text.config(state=tk.DISABLED)
+
+# Create the main window
+root = tk.Tk()
+root.title("Cohere Text Generator")
+
+# Create and place the prompt entry
+tk.Label(root, text="Enter your prompt:").pack(pady=10)
+prompt_entry = tk.Entry(root, width=50)
+prompt_entry.pack(pady=10)
+
+# Create and place the generate button
+generate_button = tk.Button(root, text="Generate Text", command=on_generate_text)
+generate_button.pack(pady=10)
+
+# Create and place the result text area
+tk.Label(root, text="Generated Text:").pack(pady=10)
+result_text = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=60, height=20, state=tk.DISABLED)
+result_text.pack(pady=10)
 
 # Run the application
 root.mainloop()
